@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import classNames from 'classnames';
 
-import { EHorizontalTabVariant } from '../../Utils/StyleConfig';
+import { EHorizontalTabVariant, ETabColourVariant } from '../../Utils/StyleConfig';
 import TabPane, { Props as TabPaneProps } from './TabPane';
 
 import {
@@ -18,6 +18,7 @@ const Tabs: Tabs = ({
   variant = 'underlined',
   className,
   alignment = 'horizontal',
+  colour = ETabColourVariant.BLACK,
 }) => {
   const [currentIndex, setCurrentIndex] = React.useState(0);
   const activeTabOrIndex: string | number = activeTab || currentIndex;
@@ -40,6 +41,8 @@ const Tabs: Tabs = ({
     >
       <TabsHeader
         className={classNames(`${alignment}-tabs-header`, 'tabs-header')}
+        colour={colour}
+        alignment={alignment}
       >
         <ul
           className={classNames(
@@ -63,7 +66,7 @@ const Tabs: Tabs = ({
                     `${variant}`,
                     `${tabClassName}`
                   )}
-                  key={data.props.tab}
+                  key={index}
                   role="tab"
                   aria-selected={activeTabOrIndex === tabLabel && true}
                   aria-controls={`tab-item-${tabLabel}`}
@@ -113,8 +116,9 @@ interface Props {
   variant?: EHorizontalTabVariant;
   alignment?: string;
   activeTab?: string | number;
-  onTabClick?(tab: React.ReactText): void;
+  onTabClick?(tab: React.ReactText | React.ReactNode): void;
   className?: string;
+  colour?: ETabColourVariant;
 }
 
 export default Tabs;

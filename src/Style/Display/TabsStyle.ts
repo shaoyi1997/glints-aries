@@ -1,7 +1,12 @@
 import styled from 'styled-components';
 
-import { SecondaryColor } from '../Colors';
-import { ScreenSize } from '../../Utils/StyleConfig';
+import { SecondaryColor, Greyscale } from '../Colors';
+import { ScreenSize, ETabColourVariant, ETabAlignment } from '../../Utils/StyleConfig';
+
+interface TabHeader {
+  colour: ETabColourVariant;
+  alignment: string;
+}
 
 export const TabsContainer = styled.div`
   position: relative;
@@ -14,7 +19,7 @@ export const TabsContainer = styled.div`
   }
 `;
 
-export const TabsHeader = styled.div`
+export const TabsHeader = styled.div<TabHeader>`
   position: relative;
 
   &.vertical-tabs-header {
@@ -63,7 +68,10 @@ export const TabsHeader = styled.div`
     }
 
     .horizontal-tab.underlined {
-      margin: 0 10px;
+      margin: ${({ colour }) =>
+        colour === ETabColourVariant.GREY
+          ? '0 15px'
+          : '0 10px'};
     }
 
     .vertical-tab {
@@ -95,11 +103,21 @@ export const TabsHeader = styled.div`
 
       &.underlined.active.horizontal-tab,
       &.active.vertical-tab {
-        border-bottom: 2px solid ${SecondaryColor.black};
+        border-bottom: ${({ colour }) =>
+          colour === ETabColourVariant.GREY
+            ? `4px solid ${SecondaryColor.actionblue}`
+            : `2px solid ${Greyscale.black}`};
 
         button {
           font-weight: bold;
           text-transform: uppercase;
+          color: ${({ colour }) =>
+            colour === ETabColourVariant.GREY
+              ? `${SecondaryColor.actionblue}`
+              : `${Greyscale.black}`};
+        }
+        button:hover {
+          border: 0;
         }
       }
 
@@ -113,9 +131,11 @@ export const TabsHeader = styled.div`
       }
 
       &.active.vertical-tab {
-        border-bottom: 2px solid ${SecondaryColor.black};
         @media (min-width: ${ScreenSize.tablet}px) {
-          border-right: 2px solid ${SecondaryColor.black};
+          border-right: ${({ colour }) =>
+            colour === ETabColourVariant.GREY
+              ? `4px solid ${SecondaryColor.actionblue}`
+              : `2px solid ${Greyscale.black}`};
           border-bottom: none;
         }
 
@@ -124,6 +144,12 @@ export const TabsHeader = styled.div`
           text-transform: uppercase;
         }
       }
+    }
+
+    svg {
+      margin-right: 10px;
+      height: 15px;
+      width: 15px;
     }
 
     &:focus {
@@ -142,6 +168,34 @@ export const TabsHeader = styled.div`
       cursor: pointer;
       outline: none;
       text-transform: uppercase;
+      ${({ colour }) => {
+        if (colour === ETabColourVariant.GREY) {
+          return `
+            letter-spacing: 1px;
+            font-weight: 500;
+            color: ${Greyscale.grey};
+          `;
+      }}};
+    }
+
+    button:hover {
+      ${({ colour, alignment }) => {
+        if (colour === ETabColourVariant.GREY && alignment === ETabAlignment.VERTICAL) {
+          return `
+            color: ${SecondaryColor.actionblue};
+            border-bottom: 4px solid rgba(1, 126, 183, 0.5);
+            @media (min-width: ${ScreenSize.tablet}px) {
+              border-bottom: 0;
+              border-right: 4px solid rgba(1, 126, 183, 0.5);
+            }
+          `
+        } else if (colour === ETabColourVariant.GREY && alignment === ETabAlignment.HORIZONTAL) {
+          return `
+            color: ${SecondaryColor.actionblue};
+            border-bottom: 4px solid rgba(1, 126, 183, 0.5);
+          `
+        }
+    }};
     }
   }
 
